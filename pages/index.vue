@@ -1,11 +1,11 @@
 <template>
-  <signup />
+  <Homepage />
 </template>
 
 <script>
-import Signup from '../components/Signup.vue'
+import Homepage from '../components/Homepage.vue'
 export default {
-  components: { Signup },
+  components: {  Homepage },
   name: 'IndexPage',
 }
 </script>

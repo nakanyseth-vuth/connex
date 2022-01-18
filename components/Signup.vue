@@ -49,7 +49,7 @@
 							</svg>
 							<input class="pl-2 outline-none border-none" type="text" name="" id="" placeholder="Password" />
       </div>
-							<button type="submit" class="block w-full bg-indigo-600 mt-4 py-2 rounded-2xl text-white font-semibold mb-2">Login</button>
+							<button type="submit" class="block w-full bg-indigo-600 mt-4 py-2 rounded-2xl text-white font-semibold mb-2">Register</button>
 							<span class="text-sm ml-2 hover:text-blue-500 cursor-pointer">Forgot Password ?</span>
 		</form>
 	</div>
