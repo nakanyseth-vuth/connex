@@ -4,11 +4,21 @@
       class="relative overflow-hidden md:flex w-1/2 bg-gradient-to-tr from-blue-800 to-purple-700 i justify-around items-center hidden"
     >
       <div class="px-10">
-        <h1 class="text-white font-bold text-4xl font-sans">Start connexting with people around the world with Connex</h1>
+        <h1 class="text-white font-bold text-4xl font-sans">
+          Start connexting with people around the world with Connex
+        </h1>
         <p class="text-white mt-4">
-          A platform where people with similar hobby can enjoy together company and build a healthy community
+          A platform where people with similar hobby can enjoy together company
+          and build a healthy community
         </p>
-      <div><img src="~/static/intro-page-pic.png" alt="" srcset="" class="w-1/2 h-1/2 ml-24 mt-5"></div>
+        <div>
+          <img
+            src="~/static/intro-page-pic.png"
+            alt=""
+            srcset=""
+            class="w-1/2 h-1/2 ml-24 mt-5"
+          />
+        </div>
       </div>
       <div
         class="absolute -bottom-32 -left-40 w-80 h-80 border-4 rounded-full border-opacity-30 border-t-8"
@@ -81,13 +91,13 @@
           >Don't have an account?</span
         >
       </form>
+
+      CHAT
     </div>
   </div>
 </template>
 
-
 <script>
-
 export default {
   head: {
     title: 'Login',
