@@ -113,30 +113,32 @@ export default {
       password: '',
     }
   },
-  created() {
-    const isAuth = this.$store.getters['users/isAuth']
-    if (isAuth) {
-      this.$toast.show({
-        type: 'warning',
-        message: 'Please logout first!',
-      })
-      this.$router.push('/')
-    }
-  },
+  created() {},
   methods: {
     async login() {
       this.loading = true
+      const { email, password } = this
       const formData = {
-        email: this.email,
-        password: this.password,
+        email,
+        password,
       }
       try {
-        await this.$store.dispatch('users/login', formData)
-        this.loading = false
-        console.log(this.$store.state.users.isAuth)
+        await this.$auth.loginWith('local', {
+          data: formData,
+        })
+        this.$toast.show({
+          type: 'success',
+          title: 'Login Success.',
+          message: 'Welcome Back to Connex!',
+        })
         this.$router.push('/')
       } catch (error) {
-        this.loading = false
+        console.log(error)
+        this.$toast.show({
+          type: 'error',
+          title: 'Error',
+          message: error.response.data.message,
+        })
       }
     },
   },

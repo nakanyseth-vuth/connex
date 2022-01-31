@@ -155,30 +155,36 @@ export default {
       loading: false,
     }
   },
-  created() {
-    const isAuth = this.$store.getters['users/isAuth']
-    if (isAuth) {
-      this.$toast.show({
-        type: 'warning',
-        message: 'Please logout first!',
-      })
-      this.$router.push('/')
-    }
-  },
+  created() {},
   methods: {
     async signUp() {
       this.loading = true
+      const { fullName, username, email, password } = this
       const formData = {
-        fullName: this.fullName,
-        username: this.username,
-        email: this.email,
-        password: this.password,
+        fullName,
+        username,
+        email,
+        password,
       }
       try {
-        await this.$store.dispatch('users/signUp', formData)
-        this.loading = false
+        await this.$axios.post('register', formData)
+        await this.$auth.loginWith('local', {
+          data: formData,
+        })
+        this.$toast.show({
+          type: 'success',
+          title: 'Success',
+          message: 'Sign up success. Welcome to Connex!',
+        })
         this.$router.push('/')
-      } catch (error) {}
+      } catch (error) {
+        console.log(error)
+        this.$toast.show({
+          type: 'error',
+          title: 'Error',
+          message: error.response.data.message,
+        })
+      }
     },
   },
 }
