@@ -4,11 +4,21 @@
       class="relative overflow-hidden md:flex w-1/2 bg-gradient-to-tr from-blue-800 to-purple-700 i justify-around items-center hidden"
     >
       <div class="px-10">
-        <h1 class="text-white font-bold text-4xl font-sans">Start connexting with people around the world with Connex</h1>
+        <h1 class="text-white font-bold text-4xl font-sans">
+          Start connexting with people around the world with Connex
+        </h1>
         <p class="text-white mt-4">
-          A platform where people with similar hobby can enjoy together company and build a healthy community
+          A platform where people with similar hobby can enjoy together company
+          and build a healthy community
         </p>
-      <div><img src="~/static/intro-page-pic.png" alt="" srcset="" class="w-1/2 h-1/2 ml-24 mt-5"></div>
+        <div>
+          <img
+            src="~/static/intro-page-pic.png"
+            alt=""
+            srcset=""
+            class="w-1/2 h-1/2 ml-24 mt-5"
+          />
+        </div>
       </div>
       <div
         class="absolute -bottom-32 -left-40 w-80 h-80 border-4 rounded-full border-opacity-30 border-t-8"
@@ -24,7 +34,7 @@
       ></div>
     </div>
     <div class="flex md:w-1/2 justify-center py-10 items-center bg-white">
-      <form class="bg-white">
+      <form class="bg-white" @submit.prevent="login()">
         <h1 class="text-gray-800 font-bold text-2xl mb-1">Connex</h1>
         <p class="text-sm font-normal text-gray-600 mb-7">Start Connexting</p>
         <div class="flex items-center border-2 py-2 px-3 rounded-2xl mb-4">
@@ -43,11 +53,13 @@
             />
           </svg>
           <input
+            v-model="email"
             class="pl-2 outline-none border-none"
-            type="text"
+            type="email"
             name=""
             id=""
             placeholder="Email Address"
+            required
           />
         </div>
         <div class="flex items-center border-2 py-2 px-3 rounded-2xl">
@@ -64,33 +76,69 @@
             />
           </svg>
           <input
+            v-model="password"
             class="pl-2 outline-none border-none"
-            type="text"
+            type="password"
             name=""
             id=""
             placeholder="Password"
+            required
           />
         </div>
         <button
           type="submit"
           class="block w-full bg-indigo-600 mt-4 py-2 rounded-2xl text-white font-semibold mb-2"
         >
-          Login
+          {{ !loading ? 'Log In' : 'Loading....' }}
         </button>
-        <span class="text-sm hover:text-blue-500 cursor-pointer"
-          >Don't have an account?</span
+        <nuxt-link
+          to="/signup"
+          class="text-sm hover:text-blue-500 cursor-pointer"
+          >Don't have an account?</nuxt-link
         >
       </form>
     </div>
   </div>
 </template>
 
-
 <script>
-
 export default {
   head: {
     title: 'Login',
+  },
+  data() {
+    return {
+      loading: false,
+      email: '',
+      password: '',
+    }
+  },
+  created() {
+    const isAuth = this.$store.getters['users/isAuth']
+    if (isAuth) {
+      this.$toast.show({
+        type: 'warning',
+        message: 'Please logout first!',
+      })
+      this.$router.push('/')
+    }
+  },
+  methods: {
+    async login() {
+      this.loading = true
+      const formData = {
+        email: this.email,
+        password: this.password,
+      }
+      try {
+        await this.$store.dispatch('users/login', formData)
+        this.loading = false
+        console.log(this.$store.state.users.isAuth)
+        this.$router.push('/')
+      } catch (error) {
+        this.loading = false
+      }
+    },
   },
 }
 </script>

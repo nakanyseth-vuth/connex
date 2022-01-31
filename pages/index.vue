@@ -3,9 +3,10 @@
 </template>
 
 <script>
-import Homepage from '../components/Homepage.vue'
+import Homepage from '../components/Homepage/Homepage.vue'
 export default {
-  components: {  Homepage },
+  components: { Homepage },
   name: 'IndexPage',
+  middleware: 'auth',
 }
 </script>

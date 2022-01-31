@@ -8,12 +8,13 @@
         <p class="text-white mt-1">
           The most popular peer to peer lending at SEA
         </p>
-        <button
-          type="submit"
-          class="block w-28 bg-white text-indigo-800 mt-4 py-2 rounded-2xl font-bold mb-2"
-        >
-          Read More
-        </button>
+        <nuxt-link to="/login">
+          <button
+            class="block bg-white text-indigo-800 mt-4 p-2 rounded-2xl font-bold mb-2"
+          >
+            Have an account?
+          </button>
+        </nuxt-link>
       </div>
       <div
         class="absolute -bottom-32 -left-40 w-80 h-80 border-4 rounded-full border-opacity-30 border-t-8"
@@ -29,7 +30,7 @@
       ></div>
     </div>
     <div class="flex md:w-1/2 justify-center py-10 items-center bg-white">
-      <form class="bg-white">
+      <form class="bg-white" @submit.prevent="signUp">
         <h1 class="text-gray-800 font-bold text-2xl mb-1">Hello Friend!</h1>
         <p class="text-sm font-normal text-gray-600 mb-7">Welcome to Connex</p>
         <div class="flex items-center border-2 py-2 px-3 rounded-2xl mb-4">
@@ -46,6 +47,8 @@
             />
           </svg>
           <input
+            required
+            v-model="fullName"
             class="pl-2 outline-none border-none"
             type="text"
             name=""
@@ -69,6 +72,8 @@
             />
           </svg>
           <input
+            required
+            v-model="username"
             class="pl-2 outline-none border-none"
             type="text"
             name=""
@@ -92,6 +97,8 @@
             />
           </svg>
           <input
+            required
+            v-model="email"
             class="pl-2 outline-none border-none"
             type="text"
             name=""
@@ -113,8 +120,10 @@
             />
           </svg>
           <input
+            required
+            v-model="password"
             class="pl-2 outline-none border-none"
-            type="text"
+            type="password"
             name=""
             id=""
             placeholder="Password"
@@ -124,11 +133,11 @@
           type="submit"
           class="block w-full bg-indigo-600 mt-4 py-2 rounded-2xl text-white font-semibold mb-2"
         >
-          Login
+          {{ !loading ? 'Sign Up' : 'Loading....' }}
         </button>
-        <span class="text-sm ml-2 hover:text-blue-500 cursor-pointer"
+        <!-- <span class="text-sm ml-2 hover:text-blue-500 cursor-pointer"
           >Forgot Password ?</span
-        >
+        > -->
       </form>
     </div>
   </div>
@@ -137,5 +146,40 @@
 <script>
 export default {
   name: 'Signup',
+  data() {
+    return {
+      fullName: '',
+      username: '',
+      email: '',
+      password: '',
+      loading: false,
+    }
+  },
+  created() {
+    const isAuth = this.$store.getters['users/isAuth']
+    if (isAuth) {
+      this.$toast.show({
+        type: 'warning',
+        message: 'Please logout first!',
+      })
+      this.$router.push('/')
+    }
+  },
+  methods: {
+    async signUp() {
+      this.loading = true
+      const formData = {
+        fullName: this.fullName,
+        username: this.username,
+        email: this.email,
+        password: this.password,
+      }
+      try {
+        await this.$store.dispatch('users/signUp', formData)
+        this.loading = false
+        this.$router.push('/')
+      } catch (error) {}
+    },
+  },
 }
 </script>
