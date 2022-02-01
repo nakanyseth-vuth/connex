@@ -1,21 +1,30 @@
 <template>
-  <Homepage />
+  <div>
+    <Homepage />
+    <pre>{{ user }}</pre>
+  </div>
 </template>
 
 <script>
 import Homepage from '../components/Homepage/Homepage.vue'
+import setToken from '~/utils/setToken'
+import { mapGetters } from 'vuex'
 export default {
-  asyncData({ store, redirect }) {
-    // const isAuth = store.getters['users/isAuth']
-    // // If the user is not authenticated
-    // if (!isAuth) {
-    //   const REDIRECT_URL = '/login'
-    //   return redirect(REDIRECT_URL)
-    // }
-
-    console.log(store.getters['users/user'])
+  async asyncData({ store }) {
+    await store.dispatch('users/getUser')
   },
   components: { Homepage },
   name: 'IndexPage',
+  created() {
+    const token = this.$cookies.get('token')
+    if (token) {
+      setToken(this.$axios, token)
+    }
+  },
+  computed: {
+    ...mapGetters({
+      user: 'users/getUser',
+    }),
+  },
 }
 </script>

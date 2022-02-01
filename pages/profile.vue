@@ -12,7 +12,7 @@
         <div class="ml-10">
           <div class="flex items-center">
             <h2 class="block leading-relaxed font-light text-gray-700 text-3xl">
-              Max Dara
+              {{ user.name }}
             </h2>
             <!-- <a class="cursor-pointer h-7 px-3 ml-3 focus:outline-none hover:border-transparent text-center rounded border border-gray-400 hover:bg-blue-500 hover:text-white bg-transparent text-gray-500 font-semibold">Editar perfil</a> -->
 
@@ -67,27 +67,24 @@
           <ul class="flex justify-content-around items-center">
             <li>
               <span class="block text-base flex"
-                ><span class="font-bold mr-2">3 </span> Posts</span
+                ><span class="font-bold mr-2">{{ posts.length }} </span> Posts</span
               >
             </li>
             <li>
               <span class="cursor-pointer block text-base flex ml-5"
-                ><span class="font-bold mr-2">102 </span> Followers</span
+                ><span class="font-bold mr-2">{{ user.followers.length }} </span> Followers</span
               >
             </li>
             <li>
               <span class="cursor-pointer block text-base flex ml-5"
-                ><span class="font-bold mr-2">21 </span> followed</span
+                ><span class="font-bold mr-2">{{ user.followings.length }} </span> followed</span
               >
             </li>
           </ul>
           <br />
           <div class="">
             <h1 class="text-base font-bold font-light"></h1>
-            <span class="text-base">Live, Love, Play GAME 24/7</span><br />
-            <span class="text-base"
-              >I am Dara, I like music, and record videos</span
-            >
+            <span class="text-base"> {{ user.bio }}</span><br />
             <!-- <a class="block text-base text-blue-500 mt-2" target="_blank"></a> -->
           </div>
         </div>
@@ -130,9 +127,27 @@
 </template>
 
 <script>
-import Header from '~/components/Utils/Header'
-
+import Header from '../components/Utils/Header.vue'
+import setToken from '~/utils/setToken'
+import { mapGetters } from 'vuex'
 export default {
+  async asyncData({ store }) {
+    await store.dispatch('users/getUser')
+    await store.dispatch('post/getPosts')
+  },
   components: { Header },
+  name: 'ProfilePage',
+  created() {
+    const token = this.$cookies.get('token')
+    if (token) {
+      setToken(this.$axios, token)
+    }
+  },
+  computed: {
+    ...mapGetters({
+      user: 'users/getUser',
+      posts: 'post/getPosts'
+    }),
+  },
 }
 </script>

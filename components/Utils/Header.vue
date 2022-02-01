@@ -167,12 +167,7 @@
                 id="user-menu"
                 aria-label="User menu"
                 aria-haspopup="true"
-              >
-                <img
-                  class="h-8 w-8 rounded-full"
-                  src="~/static/profile.jpg"
-                  alt
-                />
+              >{{ user.name}}
               </button>
             </nuxt-link>
           </div>
@@ -183,7 +178,15 @@
 </template>
 
 <script>
-export default {}
+import { mapGetters } from 'vuex'
+export default {
+  name: 'IndexPage',
+  computed: {
+    ...mapGetters({
+      user: 'users/getUser',
+    }),
+  },
+}
 </script>
 
 <style></style>
