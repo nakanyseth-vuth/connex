@@ -2,7 +2,7 @@
   <nav class="bg-white shadow px-48 border-b border-gray-400">
     <div class="max-w-7xl mx-auto px-2 sm:px-4 lg:px-8">
       <div class="flex justify-between h-16">
-        <div class="flex px-2 lg:px-0">
+        <nuxt-link to="/" class="flex px-2 lg:px-0">
           <div class="flex-shrink-0 flex items-center">
             <img
               class="block lg:hidden h-8 w-auto"
@@ -15,7 +15,7 @@
               alt="Workflow logo"
             />
           </div>
-        </div>
+        </nuxt-link>
         <div class="flex-1 flex items-center justify-center px-2 lg:ml-12">
           <div class="max-w-lg w-full lg:max-w-xs">
             <label for="search" class="sr-only">Search</label>
@@ -85,31 +85,33 @@
         </div>
         <!-- icons-->
         <div class="lg:ml-4 lg:flex lg:items-center">
-          <button
-            class="flex-shrink-0 p-3 border-transparent text-gray-700 rounded-full hover:text-gray-600 focus:outline-none focus:text-gray-600 transition duration-150 ease-in-out"
-            aria-label="Notifications"
-          >
-            <svg
-              aria-label="Home"
-              class="_8-yf5"
-              color="#262626"
-              fill="#262626"
-              height="24"
-              role="img"
-              viewBox="0 0 24 24"
-              width="24"
+          <nuxt-link to="/">
+            <button
+              class="flex-shrink-0 p-3 border-transparent text-gray-700 rounded-full hover:text-gray-600 focus:outline-none focus:text-gray-600 transition duration-150 ease-in-out"
+              aria-label="Notifications"
             >
-              <path
-                d="M9.005 16.545a2.997 2.997 0 012.997-2.997h0A2.997 2.997 0 0115 16.545V22h7V11.543L12 2 2 11.543V22h7.005z"
-                fill="none"
-                stroke="currentColor"
-                stroke-linejoin="round"
-                stroke-width="2"
-              ></path>
-            </svg>
-          </button>
+              <svg
+                aria-label="Home"
+                class="_8-yf5"
+                color="#262626"
+                fill="#262626"
+                height="24"
+                role="img"
+                viewBox="0 0 24 24"
+                width="24"
+              >
+                <path
+                  d="M9.005 16.545a2.997 2.997 0 012.997-2.997h0A2.997 2.997 0 0115 16.545V22h7V11.543L12 2 2 11.543V22h7.005z"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                ></path>
+              </svg>
+            </button>
+          </nuxt-link>
 
-          <button
+          <!-- <button
             class="flex-shrink-0 p-3 border-transparent text-gray-700 rounded-full hover:text-gray-600 focus:outline-none focus:text-gray-600 transition duration-150 ease-in-out"
             aria-label="Notifications"
           >
@@ -135,9 +137,9 @@
                 fill-rule="evenodd"
               ></path>
             </svg>
-          </button>
+          </button> -->
 
-          <button
+          <!-- <button
             class="flex-shrink-0 p-3 border-transparent text-gray-700 rounded-full hover:text-gray-600 focus:outline-none focus:text-gray-600 transition duration-150 ease-in-out"
             aria-label="Notifications"
           >
@@ -155,11 +157,11 @@
                 d="M16.792 3.904A4.989 4.989 0 0121.5 9.122c0 3.072-2.652 4.959-5.197 7.222-2.512 2.243-3.865 3.469-4.303 3.752-.477-.309-2.143-1.823-4.303-3.752C5.141 14.072 2.5 12.167 2.5 9.122a4.989 4.989 0 014.708-5.218 4.21 4.21 0 013.675 1.941c.84 1.175.98 1.763 1.12 1.763s.278-.588 1.11-1.766a4.17 4.17 0 013.679-1.938m0-2a6.04 6.04 0 00-4.797 2.127 6.052 6.052 0 00-4.787-2.127A6.985 6.985 0 00.5 9.122c0 3.61 2.55 5.827 5.015 7.97.283.246.569.494.853.747l1.027.918a44.998 44.998 0 003.518 3.018 2 2 0 002.174 0 45.263 45.263 0 003.626-3.115l.922-.824c.293-.26.59-.519.885-.774 2.334-2.025 4.98-4.32 4.98-7.94a6.985 6.985 0 00-6.708-7.218z"
               ></path>
             </svg>
-          </button>
+          </button> -->
 
           <!-- Profile dropdown -->
           <div class="ml-4 relative flex-shrink-0">
-            <div>
+            <nuxt-link to="/profile">
               <button
                 class="flex rounded-full border-gray-700 transition duration-150 ease-in-out"
                 id="user-menu"
@@ -172,7 +174,7 @@
                   alt
                 />
               </button>
-            </div>
+            </nuxt-link>
           </div>
         </div>
       </div>

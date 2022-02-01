@@ -35,6 +35,8 @@ export default {
   modules: [
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
+    '@nuxtjs/auth-next',
+    'cookie-universal-nuxt', // https://www.npmjs.com/package/cookie-universal-nuxt
     [
       'nuxt-tailvue',
       {
@@ -57,9 +59,12 @@ export default {
   auth: {
     strategies: {
       local: {
+        token: {
+          property: 'auth_token',
+        },
         endpoints: {
-          login: { url: '/login', method: 'post', propertyName: 'data.token' },
-          user: { url: '/user', method: 'get', propertyName: 'data' },
+          login: { url: '/auth', method: 'post', propertyName: 'token' },
+          user: { url: '/auth', method: 'get', propertyName: false },
           logout: false,
         },
       },

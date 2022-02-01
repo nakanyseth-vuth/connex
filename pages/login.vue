@@ -113,7 +113,13 @@ export default {
       password: '',
     }
   },
-  created() {},
+  created() {
+    const isAuth = this.$store.getters['users/isAuth']
+    console.log('isAuth:', isAuth)
+    if (isAuth) {
+      this.$router.push('/')
+    }
+  },
   methods: {
     async login() {
       this.loading = true
@@ -122,24 +128,9 @@ export default {
         email,
         password,
       }
+      await this.$store.dispatch('users/login', formData)
       try {
-        await this.$auth.loginWith('local', {
-          data: formData,
-        })
-        this.$toast.show({
-          type: 'success',
-          title: 'Login Success.',
-          message: 'Welcome Back to Connex!',
-        })
-        this.$router.push('/')
-      } catch (error) {
-        console.log(error)
-        this.$toast.show({
-          type: 'error',
-          title: 'Error',
-          message: error.response.data.message,
-        })
-      }
+      } catch (error) {}
     },
   },
 }

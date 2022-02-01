@@ -1,5 +1,5 @@
 export default function ({ store, redirect }) {
-  const isAuth = store.getters['users/isAuth']
+  const isAuth = store.getters.isAuth
   // If the user is not authenticated
   if (!isAuth) {
     const REDIRECT_URL = '/login'
