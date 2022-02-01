@@ -1,3 +1,5 @@
+import setToken from "~/utils/setToken"
+
 export const state = () => ({
   user: null,
   isAuth: false,
@@ -5,6 +7,9 @@ export const state = () => ({
 })
 
 export const getters = {
+  getUser(state) {
+    return state.user
+  },
   isAuth(state) {
     return state.isAuth
   },
@@ -27,7 +32,6 @@ export const actions = {
   async login({ commit, dispatch }, formData) {
     try {
       const res = await this.$axios.$post('/auth', formData)
-      console.log(res)
       this.$cookies.set('token', res.token)
       commit('setAuth', true)
       commit('setToken', res.token)
@@ -37,7 +41,7 @@ export const actions = {
         title: 'Login Success',
         message: 'Welcome Back to Connex!',
       })
-      dispatch('getUser')
+      await dispatch('getUser')
       this.$router.push('/')
     } catch (error) {
       this.$toast.show({
@@ -48,9 +52,10 @@ export const actions = {
   },
 
   async getUser({ commit }) {
+    
     const token = this.$cookies.get('token')
     if (token) {
-      this.$axios.setHeader('auth_token', token)
+      setToken(this.$axios, token)
     }
     try {
       const res = await this.$axios.get('/auth', {})
