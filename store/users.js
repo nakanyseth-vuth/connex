@@ -24,13 +24,20 @@ export const actions = {
       const res = await this.$axios.$post('/register', formData)
       this.$cookies.set('token', res.token)
       commit('setAuth', true)
-      dispatch('getUser')
       this.$toast.show({
         type: 'success',
         title: 'Success',
         message: 'Sign up success. Welcome to Connex!',
       })
-    } catch (error) {}
+      dispatch('getUser')
+      this.$router.push('/')
+    } catch (error) {
+      console.log(error.response.data.msg)
+      this.$toast.show({
+        type: 'danger',
+        message: error.response.data.msg,
+      })
+    }
   },
   async login({ commit, dispatch }, formData) {
     try {
@@ -47,6 +54,8 @@ export const actions = {
       await dispatch('getUser')
       this.$router.push('/')
     } catch (error) {
+      console.log(error.response.data.msg)
+
       this.$toast.show({
         type: 'danger',
         message: error.response.data.msg,
