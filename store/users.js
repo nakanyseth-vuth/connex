@@ -1,7 +1,8 @@
 import setToken from '~/utils/setToken'
 
 export const state = () => ({
-  user: null,
+  user: {},
+  targetUser: {},
   isAuth: false,
   userToken: null,
 })
@@ -14,14 +15,14 @@ export const getters = {
     return state.isAuth
   },
   getTargetUser(state) {
-    return state.user
-  }
+    return state.targetUser
+  },
 }
 
 export const actions = {
   async signUp({ commit, dispatch }, formData) {
     try {
-      const res = await this.$axios.$post('/register', formData)
+      const res = await this.$axios.$post('/api/register', formData)
       this.$cookies.set('token', res.token)
       commit('setAuth', true)
       this.$toast.show({
@@ -41,7 +42,7 @@ export const actions = {
   },
   async login({ commit, dispatch }, formData) {
     try {
-      const res = await this.$axios.$post('/auth', formData)
+      const res = await this.$axios.$post('/api/auth', formData)
       this.$cookies.set('token', res.token)
       commit('setAuth', true)
       commit('setToken', res.token)
@@ -69,24 +70,48 @@ export const actions = {
       setToken(this.$axios, token)
     }
     try {
-      const res = await this.$axios.get('/auth', {})
+      const res = await this.$axios.get('/api/auth', {})
       commit('setUser', res.data.user)
     } catch (error) {
       console.error(error)
     }
   },
 
-  async getTargetUser({ commit }) {
-    // const token = this.$cookies.get('token')
-    // if (token) {
-    //   setToken(this.$axios, token)
-    // }
+  async getTargetUser({ commit }, username) {
+    const token = this.$cookies.get('token')
+    if (token) {
+      setToken(this.$axios, token)
+    }
     try {
-      console.log(this.state.users.user.username)
-      const res = await this.$axios.get(`/auth/${this.state.users.user.username}`)
-      commit('setUser', res.data.user)
+      const res = await this.$axios.get(`/api/auth`, { params: { username } })
+      commit('setTargetUser', res.data.user)
     } catch (error) {
       console.error(error)
+    }
+  },
+
+  // @route     PUT api/profile/:id
+  // @desc      Updating Profile
+  // @access    Private
+  async editProfile({ dispatch }, payload) {
+    console.log(payload.formData)
+    try {
+      const res = await this.$axios.put(
+        `/api/profile/${payload.id}`,
+        payload.formData
+      )
+      dispatch('getTargetUser')
+      this.$toast.show({
+        type: 'success',
+        message: 'Edit successful',
+      })
+    } catch (error) {
+      console.log(error.response.data.msg)
+
+      this.$toast.show({
+        type: 'danger',
+        message: error.response.data.msg,
+      })
     }
   },
 }
@@ -94,6 +119,9 @@ export const actions = {
 export const mutations = {
   setUser(state, user) {
     state.user = user
+  },
+  setTargetUser(state, user) {
+    state.targetUser = user
   },
   setAuth(state, value) {
     state.isAuth = value

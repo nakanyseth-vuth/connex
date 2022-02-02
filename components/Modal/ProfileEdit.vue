@@ -3,7 +3,8 @@
     class="py-12 bg-gray-700 bg-opacity-50 transition duration-150 ease-in-out z-10 absolute top-0 right-0 bottom-0 left-0"
   >
     <div role="alert" class="container mx-auto w-11/12 md:w-2/3 max-w-lg">
-      <div
+      <form
+        @submit.prevent="handleForm"
         class="relative py-8 px-5 md:px-10 bg-white shadow-md rounded border border-gray-400"
       >
         <div class="w-full flex justify-start text-gray-600 mb-3">
@@ -34,6 +35,7 @@
         >
         <input
           class="mb-5 mt-2 text-gray-600 focus:outline-none focus:border focus:border-indigo-700 font-normal w-full h-10 flex items-center pl-3 text-sm border-gray-300 rounded border"
+          v-model="name"
         />
         <label
           class="text-gray-800 text-sm font-bold leading-tight tracking-normal"
@@ -41,6 +43,7 @@
         >
         <input
           class="mb-5 mt-2 text-gray-600 focus:outline-none focus:border focus:border-indigo-700 font-normal w-full h-10 flex items-center pl-3 text-sm border-gray-300 rounded border"
+          v-model="username"
         />
         <label
           class="text-gray-800 text-sm font-bold leading-tight tracking-normal"
@@ -48,6 +51,7 @@
         >
         <input
           class="mb-5 mt-2 text-gray-600 focus:outline-none focus:border focus:border-indigo-700 font-normal w-full h-10 flex items-center pl-3 text-sm border-gray-300 rounded border"
+          v-model="bio"
         />
         <label
           for="email2"
@@ -67,7 +71,7 @@
           </button>
           <button
             class="focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400 ml-3 bg-gray-100 transition duration-150 text-gray-600 ease-in-out hover:border-gray-400 hover:bg-gray-300 border rounded px-8 py-2 text-sm"
-            onclick="modalHandler()"
+            @click="closeModal()"
           >
             Cancel
           </button>
@@ -95,32 +99,43 @@
             <line x1="6" y1="6" x2="18" y2="18" />
           </svg>
         </button>
-      </div>
+      </form>
     </div>
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
 export default {
   data() {
+    const user = this.$store.state.users.targetUser
     return {
       loading: false,
-      name: '',
-      username: '',
-      bio: '',
+      name: user.name,
+      username: user.username,
+      bio: user.bio,
       profile: '',
     }
   },
+
   methods: {
     closeModal() {
       this.$emit('closeModal', 'just close')
     },
+    async handleForm() {
+      const id = this.$store.state.users.user._id
+      const formData = {
+        name: this.name,
+        username: this.username,
+        bio: this.bio,
+        profileImage: this.profile,
+      }
+      const payload = { id, formData }
+      try {
+        this.$store.dispatch('users/editProfile', payload)
+      } catch (error) {}
+      this.closeModal()
+    },
   },
-  computed: {
-    ...mapGetters({
-      user: 'users/getUser',
-    }),
-  },
+  computed: {},
 }
 </script>

@@ -1,6 +1,5 @@
 <template>
   <div>
-    <Header />
     <PostForm />
   </div>
 </template>
