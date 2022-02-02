@@ -132,7 +132,7 @@ import setToken from '~/utils/setToken'
 import { mapGetters } from 'vuex'
 export default {
   async asyncData({ store }) {
-    await store.dispatch('users/getUser')
+    await store.dispatch('users/getTargetUser')
     await store.dispatch('post/getPosts')
   },
   components: { Header },
@@ -145,7 +145,7 @@ export default {
   },
   computed: {
     ...mapGetters({
-      user: 'users/getUser',
+      user: 'users/getTargetUser',
       posts: 'post/getPosts'
     }),
   },

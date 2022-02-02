@@ -1,4 +1,4 @@
-import setToken from "~/utils/setToken"
+import setToken from '~/utils/setToken'
 
 export const state = () => ({
   user: null,
@@ -13,6 +13,9 @@ export const getters = {
   isAuth(state) {
     return state.isAuth
   },
+  getTargetUser(state) {
+    return state.user
+  }
 }
 
 export const actions = {
@@ -52,13 +55,26 @@ export const actions = {
   },
 
   async getUser({ commit }) {
-    
     const token = this.$cookies.get('token')
     if (token) {
       setToken(this.$axios, token)
     }
     try {
       const res = await this.$axios.get('/auth', {})
+      commit('setUser', res.data.user)
+    } catch (error) {
+      console.error(error)
+    }
+  },
+
+  async getTargetUser({ commit }) {
+    // const token = this.$cookies.get('token')
+    // if (token) {
+    //   setToken(this.$axios, token)
+    // }
+    try {
+      console.log(this.state.users.user.username)
+      const res = await this.$axios.get(`/auth/${this.state.users.user.username}`)
       commit('setUser', res.data.user)
     } catch (error) {
       console.error(error)
