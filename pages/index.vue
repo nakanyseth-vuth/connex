@@ -13,6 +13,7 @@ export default {
   async asyncData({ store }) {
     await store.dispatch('users/getUser')
   },
+  middleware: 'protected',
   components: { Homepage },
   name: 'IndexPage',
   created() {

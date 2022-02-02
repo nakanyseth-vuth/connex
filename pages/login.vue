@@ -114,9 +114,8 @@ export default {
     }
   },
   created() {
-    const isAuth = this.$store.getters['users/isAuth']
-    console.log('isAuth:', isAuth)
-    if (isAuth) {
+    const token = this.$cookies.get('token')
+    if (token) {
       this.$router.push('/')
     }
   },
