@@ -5,15 +5,25 @@
     <div>
       <div class="flex justify-center pb-10 mt-10">
         <img
-          src="~/static/profile.jpg"
+          :src="profilePrefix + user.profileImage"
           class="h-40 w-40 rounded-full object-cover"
           alt="username"
         />
         <div class="ml-10">
           <div class="flex items-center">
-            <h2 class="block leading-relaxed font-light text-gray-700 text-3xl">
-              {{ user.name }}
-            </h2>
+            <div class="mb-3 mr-3">
+              <h2
+                class="block leading-relaxed font-light text-gray-700 text-3xl"
+              >
+                {{ user.name }}
+              </h2>
+              <h2
+                class="block leading-relaxed font-light text-gray-700 text-md"
+              >
+                {{ '@' + user.username }}
+              </h2>
+            </div>
+
             <!-- <a class="cursor-pointer h-7 px-3 ml-3 focus:outline-none hover:border-transparent text-center rounded border border-gray-400 hover:bg-blue-500 hover:text-white bg-transparent text-gray-500 font-semibold">Editar perfil</a> -->
 
             <button
@@ -21,23 +31,11 @@
             >
               <span class="block">Follow</span>
             </button>
-
             <button
-              class="flex items-center ml-3 border border-blue-600 hover:bg-blue-600 hover:text-white rounded outline-none focus:outline-none bg-blue-600 text-white text-sm py-1 px-1"
+              class="flex items-center ml-3 border border-blue-600 hover:bg-blue-600 hover:text-white rounded outline-none focus:outline-none bg-blue-600 text-white text-sm py-1 px-2"
+              @click="openModal"
             >
-              <svg
-                class="h-5 w-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M19 9l-7 7-7-7"
-                />
-              </svg>
+              <span class="block">Edit Profile</span>
             </button>
 
             <button class="ml-5">
@@ -67,24 +65,32 @@
           <ul class="flex justify-content-around items-center">
             <li>
               <span class="block text-base flex"
-                ><span class="font-bold mr-2">{{ posts.length }} </span> Posts</span
+                ><span class="font-bold mr-2">{{ posts.length }} </span>
+                Posts</span
               >
             </li>
             <li>
               <span class="cursor-pointer block text-base flex ml-5"
-                ><span class="font-bold mr-2">{{ user.followers.length }} </span> Followers</span
+                ><span class="font-bold mr-2"
+                  >{{ user.followers.length }}
+                </span>
+                Followers</span
               >
             </li>
             <li>
               <span class="cursor-pointer block text-base flex ml-5"
-                ><span class="font-bold mr-2">{{ user.followings.length }} </span> followed</span
+                ><span class="font-bold mr-2"
+                  >{{ user.followings.length }}
+                </span>
+                followed</span
               >
             </li>
           </ul>
           <br />
           <div class="">
             <h1 class="text-base font-bold font-light"></h1>
-            <span class="text-base"> {{ user.bio }}</span><br />
+            <span class="text-base"> {{ user.bio }}</span
+            ><br />
             <!-- <a class="block text-base text-blue-500 mt-2" target="_blank"></a> -->
           </div>
         </div>
@@ -123,11 +129,13 @@
         </div>
       </article>
     </div>
+    <ProfileEdit @closeModal="closeModal" v-if="isOpenModal" />
   </div>
 </template>
 
 <script>
 import Header from '../components/Utils/Header.vue'
+import ProfileEdit from '~/components/Modal/ProfileEdit.vue'
 import setToken from '~/utils/setToken'
 import { mapGetters } from 'vuex'
 export default {
@@ -135,8 +143,13 @@ export default {
     await store.dispatch('users/getTargetUser')
     await store.dispatch('post/getPosts')
   },
-  components: { Header },
   name: 'ProfilePage',
+  components: { Header, ProfileEdit },
+  data() {
+    return {
+      isOpenModal: false,
+    }
+  },
   created() {
     const token = this.$cookies.get('token')
     if (token) {
@@ -147,7 +160,25 @@ export default {
     ...mapGetters({
       user: 'users/getTargetUser',
       posts: 'post/getPosts'
+
     }),
+    profilePrefix() {
+      return this.user.profileImage.includes('uploads')
+        ? 'http://localhost:5000/'
+        : ''
+    },
+  },
+  methods: {
+    openModal() {
+      console.log('open')
+      this.isOpenModal = true
+      console.log(this.isOpenModal)
+    },
+    closeModal(txt) {
+      console.log('close', txt)
+      this.isOpenModal = false
+      console.log(this.isOpenModal)
+    },
   },
 }
 </script>

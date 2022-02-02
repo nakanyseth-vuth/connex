@@ -163,7 +163,7 @@
           <div class="ml-4 relative flex-shrink-0">
             <nuxt-link to="/profile">
               <button
-                class="flex rounded-lg p-2 bg-gray-400 transition duration-150 ease-in-out hover:bg-gray-600 text-white"
+                class="flex rounded-lg p-2 bg-green-400 transition duration-150 ease-in-out hover:bg-gray-600 text-white"
                 id="user-menu"
                 aria-label="User menu"
                 aria-haspopup="true"
