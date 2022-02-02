@@ -140,7 +140,7 @@ import setToken from '~/utils/setToken'
 import { mapGetters } from 'vuex'
 export default {
   async asyncData({ store }) {
-    await store.dispatch('users/getUser')
+    await store.dispatch('users/getTargetUser')
     await store.dispatch('post/getPosts')
   },
   name: 'ProfilePage',
@@ -158,8 +158,9 @@ export default {
   },
   computed: {
     ...mapGetters({
-      user: 'users/getUser',
-      posts: 'post/getPosts',
+      user: 'users/getTargetUser',
+      posts: 'post/getPosts'
+
     }),
     profilePrefix() {
       return this.user.profileImage.includes('uploads')
