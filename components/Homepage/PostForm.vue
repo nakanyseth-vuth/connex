@@ -1,7 +1,5 @@
 <template>
-  <div
-    class="w-full md:w-3/4 lg:w-3/5 py-5 lg:24 h-full antialiased mx-auto"
-  >
+  <div class="w-full md:w-3/4 lg:w-3/5 py-5 lg:24 h-full antialiased mx-auto">
     <form @submit.prevent="post()">
       <div class="bg-white w-full shadow rounded-lg p-5">
         <textarea
@@ -11,6 +9,16 @@
           placeholder="Speak your mind"
           required
         ></textarea>
+
+        <div class="pt-4">
+          <span>Upload Photo</span>
+          <input
+            type="file"
+            accept=".jpeg,.jpg,.png,image/jpeg,image/png"
+            aria-label="Upload Image"
+            @change="selectFile"
+          />
+        </div>
 
         <div class="w-full flex flex-row flex-wrap mt-3">
           <div class="w-1/3"></div>
