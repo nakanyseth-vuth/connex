@@ -80,37 +80,18 @@
         </div>
       </div>
       <div class="border-b border-gray-300"></div>
-      <article class="mt-10">
-        <!-- post card -->
-
-        <div v-for="post in posts" :key="post._id"
-          class="flex bg-white border shadow-lg rounded-lg mx-4 my-5 md:mx-auto w-3/5"
-        >
-          <!--horizantil margin is just for display-->
-          <div class="flex items-start px-4 py-6">
-            <img
-              class="w-12 h-12 rounded-full object-cover mr-4 shadow"
-              :src="profilePrefix + user.profileImage"
-              alt="avatar"
-            />
-            <div class="">
-              <div class="flex items-center justify-between">
-                <h2 class="text-lg font-semibold text-gray-900 -mt-1">
-                  {{ post.user.name}}
-                </h2>
-              </div>
-              <!-- <p class="text-gray-700">Posted: {{ (post.date_created.split('T')[0]).split('-').reverse().join('-') }}</p> -->
-              <p class="text-gray-700">Posted: {{ $moment(post.date_created).fromNow() }}</p>
-              <p class="mt-3 text-gray-700 text-sm">
-                {{ post.post_text}}
-              </p>
-              <div class="mt-4 flex items-center">
-              </div>
-            </div>
-          </div>
+      <div v-for="post in posts" :key="post._id">
+        <Post :post="post" />
+      </div>
+      <div
+        v-if="posts.length == 0"
+        class="mt-10 w-1/5 p-5 font-light text-lg rounded-xl mx-auto text-center"
+      >
+        Nothing to show
+        <div>
+          <img src="/searching.png" alt="" />
         </div>
-      </article>
-      <div v-if="posts.length == 0" class="w-1/5 py-3 shadow-md ui-sans-serif text-lg rounded-3xl mx-auto text-center bg-gray-50"> Nothing to show</div>      
+      </div>
     </div>
     <ProfileEdit @closeModal="closeModal" v-if="isOpenModal" />
   </div>
@@ -119,6 +100,7 @@
 <script>
 import Header from '~/components/Utils/Header.vue'
 import ProfileEdit from '~/components/Modal/ProfileEdit.vue'
+import Post from '~/components/Homepage/Post'
 import setToken from '~/utils/setToken'
 import { mapGetters } from 'vuex'
 export default {
@@ -129,7 +111,7 @@ export default {
     await store.dispatch('post/getPosts', userId)
   },
   name: 'ProfilePage',
-  components: { Header, ProfileEdit },
+  components: { Header, ProfileEdit, Post },
   middleware: 'protected',
 
   data() {

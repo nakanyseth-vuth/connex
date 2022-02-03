@@ -13,21 +13,27 @@ export const getters = {
   },
   getAllPosts(state) {
     return state.allPosts
-  }
+  },
 }
 
 export const actions = {
-  async submitPost( {commit}, formData) {
-    console.log(formData)
+  async submitPost({ dispatch }, formData) {
     try {
       const res = await this.$axios.$post('/api/post', formData)
-      console.log(res)
+      await dispatch('getAllPosts')
+      this.$toast.show({
+        type: 'success',
+        message: 'Post success!',
+      })
     } catch (error) {
       console.log(error.response)
+      this.$toast.show({
+        type: 'danger',
+        message: error.response.data.msg,
+      })
     }
   },
   async getPosts({ commit }, userId) {
-    console.log(userId)
     try {
       const res = await this.$axios.$get(`/api/post/${userId}`)
       commit('setPosts', res.posts)
@@ -36,9 +42,8 @@ export const actions = {
   },
   async getAllPosts({ commit }) {
     try {
-      const res = await this.$axios.get('/api/post' , {})
+      const res = await this.$axios.get('/api/post', {})
       commit('setAllPosts', res.data.posts)
-      console.log(res.data.posts)
     } catch {}
   },
 }
