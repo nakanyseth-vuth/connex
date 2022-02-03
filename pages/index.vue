@@ -11,6 +11,7 @@ import { mapGetters } from 'vuex'
 export default {
   async asyncData({ store }) {
     await store.dispatch('users/getUser')
+    await store.dispatch('post/getAllPosts')
   },
   middleware: 'protected',
   components: { Homepage },
@@ -28,6 +29,7 @@ export default {
   computed: {
     ...mapGetters({
       user: 'users/getUser',
+      posts: 'post/getAllPosts'
     }),
   },
 }
