@@ -162,7 +162,8 @@ export default {
   computed: {
     ...mapGetters({
       user: 'users/getTargetUser',
-      posts: 'post/getPosts',
+      posts: 'post/getPosts'
+
     }),
     profilePrefix() {
       return this.user.profileImage.includes('uploads')
