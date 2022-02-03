@@ -1,11 +1,11 @@
 <template>
   <div
-    class="w-full md:w-3/4 lg:w-4/5 p-5 md:px-12 lg:24 h-full antialiased mx-auto"
+    class="w-full md:w-3/4 lg:w-3/5 py-5 lg:24 h-full antialiased mx-auto"
   >
     <form @submit.prevent="post()">
       <div class="bg-white w-full shadow rounded-lg p-5">
         <textarea
-          v-model="text"
+          v-model="post_text"
           class="bg-gray-200 w-full rounded-lg shadow border p-2"
           rows="5"
           placeholder="Speak your mind"
@@ -42,11 +42,12 @@ export default {
   },
   methods: {
     async post() {
-      const { text } = this
+      const { post_text } = this
       const formData = {
-        text,
+        post_text,
       }
       try {
+      console.log(formData)
       await this.$store.dispatch('post/submitPost', formData)
       } catch (error) {
         console.log(error)
