@@ -15,6 +15,7 @@ export default {
   },
   middleware: 'protected',
   components: { Homepage },
+  layout: 'index',
   name: 'IndexPage',
   created() {
     const token = this.$cookies.get('token')

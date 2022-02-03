@@ -20,7 +20,7 @@ export default {
   css: [],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: [],
+  plugins: ['~plugins/v-click-outside.js'],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
@@ -57,6 +57,15 @@ export default {
     baseURL: process.env.BASE_URL,
   },
   auth: {},
+
+  layoutTransition: {
+    name: 'fade',
+    mode: 'out-in',
+  },
+  pageTransition: {
+    name: 'fade',
+    mode: 'out-in',
+  },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {},
