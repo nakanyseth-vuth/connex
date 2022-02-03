@@ -21,9 +21,10 @@ export const actions = {
       console.log(error.response)
     }
   },
-  async getPosts({ commit }, username) {
+  async getPosts({ commit }, userId) {
+    console.log(userId)
     try {
-      const res = await this.$axios.$get(`/api/post/${username}`)
+      const res = await this.$axios.$get(`/api/post/${userId}`)
       commit('setPosts', res.posts)
     } catch {}
   },

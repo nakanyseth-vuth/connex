@@ -7,7 +7,7 @@
         <img
           :src="profilePrefix + user.profileImage"
           class="h-40 w-40 rounded-full object-cover"
-          alt="username"
+          alt="profile-picture"
         />
         <div class="ml-10">
           <div class="flex items-center">
@@ -23,8 +23,6 @@
                 {{ '@' + user.username }}
               </h2>
             </div>
-
-            <!-- <a class="cursor-pointer h-7 px-3 ml-3 focus:outline-none hover:border-transparent text-center rounded border border-gray-400 hover:bg-blue-500 hover:text-white bg-transparent text-gray-500 font-semibold">Editar perfil</a> -->
 
             <button
               class="flex items-center ml-3 border border-blue-600 hover:bg-blue-600 hover:text-white rounded outline-none focus:outline-none bg-blue-600 text-white text-sm py-1 px-2"
@@ -142,7 +140,8 @@ export default {
   async asyncData({ store, params }) {
     await store.dispatch('users/getUser')
     await store.dispatch('users/getTargetUser', params.id)
-    await store.dispatch('post/getPosts', params.id)
+    const userId = store.state.users.targetUser._id
+    await store.dispatch('post/getPosts', userId)
   },
   name: 'ProfilePage',
   components: { Header, ProfileEdit },
