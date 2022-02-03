@@ -1,7 +1,6 @@
 <template>
   <div>
     <Homepage />
-    <pre>{{ user }}</pre>
   </div>
 </template>
 
@@ -17,6 +16,9 @@ export default {
   components: { Homepage },
   layout: 'index',
   name: 'IndexPage',
+  head: {
+    title: 'Homepage',
+  },
   created() {
     const token = this.$cookies.get('token')
     if (token) {

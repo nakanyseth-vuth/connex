@@ -30,16 +30,12 @@
 
 <script>
 export default {
-  head: {
-    title: 'Post',
-  },
   data() {
     return {
       text: '',
     }
   },
-  created() {
-  },
+  created() {},
   methods: {
     async post() {
       const { text } = this
@@ -47,7 +43,7 @@ export default {
         text,
       }
       try {
-      await this.$store.dispatch('post/submitPost', formData)
+        await this.$store.dispatch('post/submitPost', formData)
       } catch (error) {
         console.log(error)
       }

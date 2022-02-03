@@ -3,6 +3,8 @@ import setToken from '~/utils/setToken'
 export const state = () => ({
   user: {},
   targetUser: {},
+  searchUsers: [],
+  errorMsg: null,
   isAuth: false,
   userToken: null,
 })
@@ -16,6 +18,12 @@ export const getters = {
   },
   getTargetUser(state) {
     return state.targetUser
+  },
+  getSearchUsers(state) {
+    return state.searchUsers
+  },
+  getErrorMsg(state) {
+    return state.errorMsg
   },
 }
 
@@ -33,7 +41,6 @@ export const actions = {
       dispatch('getUser')
       this.$router.push('/')
     } catch (error) {
-      console.log(error.response.data.msg)
       this.$toast.show({
         type: 'danger',
         message: error.response.data.msg,
@@ -78,12 +85,13 @@ export const actions = {
   },
 
   async getTargetUser({ commit }, username) {
+    console.log('getTargetUser')
     const token = this.$cookies.get('token')
     if (token) {
       setToken(this.$axios, token)
     }
     try {
-      const res = await this.$axios.get(`/api/auth`, { params: { username } })
+      const res = await this.$axios.get(`/api/auth/${username}`)
       commit('setTargetUser', res.data.user)
     } catch (error) {
       console.error(error)
@@ -100,18 +108,69 @@ export const actions = {
         `/api/profile/${payload.id}`,
         payload.formData
       )
-      dispatch('getTargetUser')
+      await dispatch('getTargetUser', res.data.user.username)
       this.$toast.show({
         type: 'success',
         message: 'Edit successful',
       })
     } catch (error) {
-      console.log(error.response.data.msg)
-
       this.$toast.show({
         type: 'danger',
         message: error.response.data.msg,
       })
+    }
+  },
+
+  // @route     Post api/users/
+  // @desc      Get searched users
+  // @access    Private
+  async searchUsers({ commit }, query) {
+    try {
+      const res = await this.$axios.post(`/api/users`, { query })
+      if (res.data.users.length === 0) {
+        commit('setSearchUsers', [])
+        commit('setErrorMsg', 'Type to search any user')
+      } else {
+        commit('setErrorMsg', null)
+        commit('setSearchUsers', res.data.users)
+      }
+    } catch (error) {
+      // console.error(error.response);
+      commit('setErrorMsg', error.response.data.msg)
+    }
+  },
+
+  // @route     Post api/friends/following
+  // @desc      Follow a user
+  // @access    Private
+  async followUser({ dispatch }, username) {
+    try {
+      const res = await this.$axios.$post(`/api/friends/following`, {
+        username,
+      })
+      await dispatch('getTargetUser', res.targetUser.username)
+      await dispatch('getUser')
+      this.$toast.show({
+        type: 'success',
+        message: 'You are now following this user!',
+      })
+    } catch (error) {
+      console.error(error)
+    }
+  },
+  async unfollowUser({ dispatch }, username) {
+    try {
+      const res = await this.$axios.put(`/api/friends/unfollow`, {
+        username,
+      })
+      await dispatch('getTargetUser', res.data.targetUser.username)
+      await dispatch('getUser')
+      this.$toast.show({
+        type: 'info',
+        message: 'You have unfollowed this user!',
+      })
+    } catch (error) {
+      console.error(error)
     }
   },
 }
@@ -128,5 +187,11 @@ export const mutations = {
   },
   setToken(state, value) {
     state.userToken = value
+  },
+  setSearchUsers(state, users) {
+    state.searchUsers = users
+  },
+  setErrorMsg(state, value) {
+    state.errorMsg = value
   },
 }

@@ -6,6 +6,7 @@
       <div class="flex justify-center pb-10 mt-10">
         <img
           :src="profilePrefix + user.profileImage"
+          onerror=" this.onerror = null; this.src = 'http://localhost:5000/uploads/profile_stub_image.png';"
           class="h-40 w-40 rounded-full object-cover"
           alt="profile-picture"
         />
@@ -13,12 +14,12 @@
           <div class="flex items-center">
             <div class="mb-3 mr-3">
               <h2
-                class="block leading-relaxed font-medium text-gray-700 text-3xl"
+                class="block leading-relaxed font-medium text-gray-700 text-xl md:text-3xl"
               >
                 {{ user.name }}
               </h2>
               <h2
-                class="block leading-relaxed font-light text-gray-700 text-md"
+                class="block leading-relaxed font-light text-gray-700 text-sm md:text-md"
               >
                 {{ '@' + user.username }}
               </h2>
@@ -26,41 +27,26 @@
 
             <button
               class="flex items-center ml-3 border border-blue-600 hover:bg-blue-600 hover:text-white rounded outline-none focus:outline-none bg-blue-600 text-white text-sm py-1 px-2"
+              v-if="!ownProfile && !isFollowed"
             >
-              <span class="block">Follow</span>
+              <span class="block" @click="followUser">Follow</span>
             </button>
+            <button
+              class="flex items-center ml-3 border hover:bg-gray-600 hover:text-white rounded outline-none focus:outline-none bg-gray-500 text-white text-sm py-1 px-2"
+              v-if="isFollowed"
+            >
+              <span class="block" @click="unfollowUser">Unfollow</span>
+            </button>
+
             <button
               class="flex items-center ml-3 border border-blue-600 hover:bg-blue-600 hover:text-white rounded outline-none focus:outline-none bg-blue-600 text-white text-sm py-1 px-2"
               @click="openModal"
+              v-if="ownProfile"
             >
               <span class="block">Edit Profile</span>
             </button>
-
-            <!-- <button class="ml-5">
-              <svg
-                aria-label="Options"
-                class="_8-yf5"
-                color="#262626"
-                fill="#262626"
-                height="32"
-                role="img"
-                viewBox="0 0 24 24"
-                width="32"
-              >
-                <circle cx="12" cy="12" r="1.5"></circle>
-                <circle cx="6" cy="12" r="1.5"></circle>
-                <circle cx="18" cy="12" r="1.5"></circle>
-              </svg>
-            </button> -->
-            <!-- <a class="cursor-pointer ml-2 p-1 border-transparent text-gray-700 rounded-full hover:text-blue-600 focus:outline-none focus:text-gray-600"
-                        aria-label="Notifications">
-                            <svg class="h-8 w-8" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" stroke="currentColor" viewBox="0 0 24 24">
-                                <path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
-                                <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                            </svg>
-                        </a> -->
           </div>
-          <ul class="flex justify-content-around items-center">
+          <ul class="flex flex-wrap justify-content-around items-center gap-3">
             <li>
               <span class="block text-base flex"
                 ><span class="font-bold mr-2">{{ posts.length }} </span>
@@ -68,7 +54,7 @@
               >
             </li>
             <li>
-              <span class="cursor-pointer block text-base flex ml-5"
+              <span class="cursor-pointer block text-base flex"
                 ><span class="font-bold mr-2"
                   >{{ user.followers.length }}
                 </span>
@@ -76,11 +62,11 @@
               >
             </li>
             <li>
-              <span class="cursor-pointer block text-base flex ml-5"
+              <span class="cursor-pointer block text-base flex"
                 ><span class="font-bold mr-2"
                   >{{ user.followings.length }}
                 </span>
-                followed</span
+                Followings</span
               >
             </li>
           </ul>
@@ -152,6 +138,11 @@ export default {
       isOpenModal: false,
     }
   },
+  head() {
+    return {
+      title: this.user.name,
+    }
+  },
   created() {
     const token = this.$cookies.get('token')
     if (token) {
@@ -168,6 +159,14 @@ export default {
         ? 'http://localhost:5000/'
         : ''
     },
+    ownProfile() {
+      return this.user._id === this.$store.state.users.user._id
+    },
+    isFollowed() {
+      return this.$store.state.users.user.followings.some((following) => {
+        return following._id === this.user._id
+      })
+    },
   },
   methods: {
     openModal() {
@@ -177,6 +176,42 @@ export default {
     closeModal() {
       this.isOpenModal = false
       console.log(this.isOpenModal)
+    },
+    async followUser() {
+      this.$modal.show({
+        type: 'info',
+        title: 'Follow New User',
+        body: 'Do you want to follow this user?',
+        primary: {
+          label: 'Yes, I want to',
+          theme: 'blue',
+          action: () =>
+            this.$store.dispatch('users/followUser', this.user.username),
+        },
+        secondary: {
+          label: "No, I don't",
+          theme: 'white',
+          action: () => this.$modal.hide,
+        },
+      })
+    },
+    async unfollowUser() {
+      this.$modal.show({
+        type: 'danger',
+        title: 'Unfollow User',
+        body: 'Are you sure you want to unfollow this user?',
+        primary: {
+          label: 'Yes, I want to',
+          theme: 'red',
+          action: () =>
+            this.$store.dispatch('users/unfollowUser', this.user.username),
+        },
+        secondary: {
+          label: "No, I don't",
+          theme: 'white',
+          action: () => this.$modal.hide,
+        },
+      })
     },
   },
 }
