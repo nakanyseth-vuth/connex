@@ -1,7 +1,7 @@
 <template>
   <!-- post card -->
   <div
-    class="flex bg-white border shadow-lg rounded-lg mx-4 my-5 md:mx-auto w-3/5"
+    class="bg-white border shadow-lg rounded-lg mx-4 my-5 md:mx-auto w-3/5"
   >
     <!--horizantil margin is just for display-->
     <div class="flex items-start px-4 py-6">
@@ -16,15 +16,20 @@
             {{ post.user.name }}
           </h2>
         </div>
-        <!-- <p class="text-gray-700">Posted: {{ (post.date_created.split('T')[0]).split('-').reverse().join('-') }}</p> -->
         <p class="text-sm font-light text-gray-700">
           Posted: {{ $moment(post.date_created).fromNow() }}
         </p>
         <p class="mt-3 text-gray-700 text-base">
           {{ post.post_text }}
         </p>
-        <div class="mt-4 flex items-center"></div>
       </div>
+    </div>
+    <div class="items-center pb-6">
+      <img
+        v-if="post.post_image"
+        class="mx-auto max-w-[82%] max-h-[500px]"
+        :src="'http://localhost:5000/' + post.post_image"
+      />
     </div>
   </div>
 </template>
